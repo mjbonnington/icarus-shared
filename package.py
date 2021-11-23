@@ -6,7 +6,7 @@ version = '1.1.3'
 
 description = 'Icarus Shared Libraries'
 
-variants = [['python-2.7']]
+variants = [['python-2.7+']]
 
 requires = [
 #    'plyer'
