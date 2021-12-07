@@ -2,7 +2,7 @@
 
 name = 'ic_shared'
 
-version = '1.1.3'
+version = '1.1.4'
 
 description = 'Icarus Shared Libraries'
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# shared/os_wrapper.py
+# os_wrapper.py
 #
 # Mike Bonnington <mjbonnington@gmail.com>
 # (c) 2013-2021
@@ -12,6 +12,7 @@
 import json
 import os
 import re
+import platform
 import shutil
 import subprocess
 import sys
@@ -32,7 +33,7 @@ def execute(args):
 	verbose.detail(str(args))
 
 	try:
-		if os.environ['IC_OS'] == "win":
+		if platform.system() == 'Windows':
 			output = subprocess.check_output(args, creationflags=CREATE_NO_WINDOW)
 		else:
 			output = subprocess.check_output(args)
@@ -73,7 +74,7 @@ def call(args):
 def shell():
 	"""Open a subshell using the OS default shell in the current environment.
 	"""
-	if os.environ['IC_OS'] == "win":
+	if platform.system() == 'Windows':
 		subprocess.Popen(os.environ['IC_SHELL'], shell=True)
 	else:
 		os.system(os.environ['IC_SHELL'])
@@ -92,12 +93,12 @@ def open_(path):
 	path = translate_path(path)
 
 	try:
-		if os.environ['IC_OS'] == "win":
+		if platform.system() == 'Windows':
 			if path.startswith("//"):  # Fix for UNC paths
 				# path = path.replace("/", "\\")
 				path = os.path.normpath(path)
 			os.startfile(path)
-		elif os.environ['IC_OS'] == "mac":
+		elif platform.system() == 'Darwin':
 			subprocess.Popen('open %s' % path, shell=True)
 		else:
 			# subprocess.Popen('gio open %s' % path, shell=True)
@@ -128,7 +129,7 @@ def mkdir(path):
 
 			# Hide the folder if its name starts with a dot, as these files
 			# are not automatically hidden on Windows
-			if os.environ['IC_OS'] == "win":
+			if platform.system() == 'Windows':
 				if os.path.basename(path).startswith('.'):
 					set_hidden(path)
 
@@ -153,7 +154,7 @@ def hardlink(source, destination, verify=True):
 	src = translate_path(source)
 	dst = translate_path(destination)
 
-	if os.environ['IC_OS'] == "win":
+	if platform.system() == 'Windows':
 		# If destination is a folder, append the filename from the source
 		if os.path.isdir(dst):
 			filename = os.path.basename(src)
@@ -407,7 +408,7 @@ def translate_path(path):
 		path_tr = path
 
 		for rule in global_prefs.get('translation').get('rules'):
-			if os.environ['IC_OS'] == "win":  # Windows
+			if platform.system() == 'Windows':
 				if path.startswith(rule['mac']):
 					path_tr = path.replace(rule['mac'], rule['win'], 1)
 				elif path.startswith(rule['linux']):
@@ -415,7 +416,7 @@ def translate_path(path):
 				# Append trailing slash to Windows drive letter
 				if path_tr.endswith(":"):
 					path_tr += "\\" #os.sep
-			elif os.environ['IC_OS'] == "mac":  # macOS
+			elif platform.system() == 'Darwin':
 				if path.startswith(rule['win']):
 					path_tr = path.replace(rule['win'], rule['mac'], 1)
 				elif path.startswith(rule['linux']):
@@ -440,7 +441,7 @@ def convert_unc_path_to_drive(path):
 
 	TODO: fail gracefully if prefs file not found
 	"""
-	if os.environ['IC_OS'] != "win":
+	if platform.system() != 'Windows':
 		return path
 
 	try:
