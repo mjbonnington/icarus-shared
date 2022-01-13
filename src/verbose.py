@@ -16,7 +16,7 @@ import re
 try:
 	from plyer import notification
 	notifications = True
-except ImportError:
+except (ImportError, TypeError):
 	print("Missing dependency: Plyer\n  Unable to show desktop notifications.")
 	notifications = False
 

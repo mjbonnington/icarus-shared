@@ -2,14 +2,14 @@
 
 name = 'ic_shared'
 
-version = '1.1.4'
+version = '1.1.7'
 
 description = 'Icarus Shared Libraries'
 
-variants = [['python-2.7+']]
+# variants = [['python-2.7+']]
 
 requires = [
-#    'plyer'
+   'plyer'
 ]
 
 authors = ['mjbonnington']
