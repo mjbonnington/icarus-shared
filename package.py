@@ -2,19 +2,21 @@
 
 name = 'ic_shared'
 
-version = '1.1.7'
+version = '1.1.8'
 
 description = 'Icarus Shared Libraries'
 
-# variants = [['python-2.7+']]
-
-requires = [
-   'plyer'
-]
-
 authors = ['mjbonnington']
 
-build_command = 'python {root}/build.py {install}'
+requires = [
+    'plyer', 
+]
+
+build_requires = [
+    'rezlib', 
+]
+
+build_command = 'python -m build {install}'
 
 
 def commands():
